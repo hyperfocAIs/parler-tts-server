@@ -105,7 +105,7 @@ def get_model(model_name: str) -> Model:
     if exact_match is None:
         raise HTTPException(
             status_code=404,
-            detail=f"Model doesn't exists. Possible matches: {", ".join([model.id for model in models])}",
+            detail=f"Model doesn't exist. Possible matches: {', '.join([model.id for model in models])}"
         )
     assert exact_match.created_at is not None
     return Model(
