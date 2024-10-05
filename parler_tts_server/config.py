@@ -21,7 +21,7 @@ class Config(BaseSettings):
     model: str = "parler-tts/parler-tts-mini-expresso"  # env: MODEL
     compile_mode: str = "reduce-overhead" # env: COMPILE_MODE
     attn_implementation: str = "sdpa" # env: ATTN_IMPLEMENTATION
-    max_stream_sec: int = 10 # env: MAX_STREAM_SEC
+    max_stream_sec: int = 30 # env: MAX_STREAM_SEC
      
 
     max_models: int = 1  # env: MAX_MODELS

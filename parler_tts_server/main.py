@@ -49,28 +49,44 @@ class ModelManager:
             f"Loaded {model_name} and tokenizer in {time.perf_counter() - start:.2f} seconds"
         )
 
-        if config.compile_mode != "none":
+        compile_mode = config.compile_mode
+
+        if compile_mode != "none":
+            # need to set padding max length
             max_length = 50
+
+            # load model and tokenizer
+            tokenizer = AutoTokenizer.from_pretrained(model_name) 
+            model = ParlerTTSForConditionalGeneration.from_pretrained(
+                model_name,
+                attn_implementation=attn_implementation    
+            ).to(torch_device, dtype=torch_dtype)
+
             # compile the forward pass
             model.generation_config.cache_implementation = "static"
-            model.forward = torch.compile(model.forward, mode=config.compile_mode)
+            model.forward = torch.compile(model.forward, mode=compile_mode)
 
             # warmup
-            inputs = tokenizer("This is for compilation", return_tensors="pt", padding="max_length", max_length=max_length).to(device)
+            inputs = tokenizer("This is for compilation", return_tensors="pt", padding="max_length", max_length=max_length).to(torch_device)
 
             model_kwargs = {**inputs, "prompt_input_ids": inputs.input_ids, "prompt_attention_mask": inputs.attention_mask, }
 
-            # warmup
-            if config.compile_mode != "default":
-                    # generating more tokens than previously will trigger CUDA graphs capture
-                    # one should warmup with a number of generated tokens above max tokens targeted for subsequent generation
-                    model_kwargs = {
-                        "min_new_tokens": config.max_stream_sec*86,
-                        "max_new_tokens": config.max_stream_sec*86,
-                        **model_kwargs
-                    } 
 
-            n_steps = 1 if config.compile_mode == "default" else 2
+            # warmup
+            if compile_mode == "reduce-overhead":
+                # generating more tokens than previously will trigger CUDA graphs capture
+                # one should warmup with a number of generated tokens above max tokens targeted for subsequent generation
+                model_kwargs = {
+                    "min_new_tokens": max_stream_sec*86,
+                    "max_new_tokens": max_stream_sec*86,
+                    **model_kwargs
+                } 
+
+            if compile_mode == "default":
+                n_steps = 1
+            if compile_mode == "reduce-overhead":
+                n_steps = 2
+
             for _ in range(n_steps):
                 start_time = time.time()
                 _ = model.generate(**model_kwargs)
