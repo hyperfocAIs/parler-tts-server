@@ -50,6 +50,7 @@ class ModelManager:
         )
 
         if config.compile_mode != "none":
+            max_length = 50
             # compile the forward pass
             model.generation_config.cache_implementation = "static"
             model.forward = torch.compile(model.forward, mode=config.compile_mode)
