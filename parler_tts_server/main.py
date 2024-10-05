@@ -60,7 +60,7 @@ class ModelManager:
             model.forward = torch.compile(model.forward, mode=compile_mode)
 
             # warmup
-            inputs = tokenizer("This is for compilation", return_tensors="pt", padding="max_length", max_length=max_length).to(torch_device)
+            inputs = tokenizer("This is for compilation", return_tensors="pt", padding="max_length", max_length=max_length).to(device)
 
             model_kwargs = {**inputs, "prompt_input_ids": inputs.input_ids, "prompt_attention_mask": inputs.attention_mask, }
 
