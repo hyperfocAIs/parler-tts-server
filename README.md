@@ -1,5 +1,5 @@
 # Parler-TTS-Server
-This repository provides a server with an [OpenAI compatible API](https://platform.openai.com/docs/api-reference/audio/createSpeech) interface for [Parler-TTS](https://github.com/huggingface/parler-tts).
+This repository provides a server with an [OpenAI compatible API](https://platform.openai.com/docs/api-reference/audio/createSpeech) interface for [Parler-TTS](https://github.com/huggingface/parler-tts). It is a fork of https://github.com/fedirz/parler-tts-server adding the ability to compile and use other attention mechanisms. The next goal is to enable streaming. The motivation is that attn_implementation="sdpa" and compile_mode="reduce-overhead" enable faster than real time audio generation on an RTX 3090 (mini or large). Unfortunately, you need to set max_stream_sec high ( 30 works) to prevent recompilation at inference time, and this takes a lot of VRAM (20+GB).
 
 ## Quick Start 
 Docker
@@ -35,6 +35,8 @@ curl -s -H "content-type: application/json" localhost:8000/v1/audio/speech -d '{
 ```
 
 OpenAI SDK usage example can be found [here](./examples/openai_sdk.py)
+
+## TODO
 
 ## Citations
 ```

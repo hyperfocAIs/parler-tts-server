@@ -18,7 +18,7 @@ class ResponseFormat(enum.StrEnum):
 class Config(BaseSettings):
     log_level: str = "info"  # env: LOG_LEVEL
     torch_dtype: str = "torch.bfloat16" # env: TORCH_DTYPE
-    model: str = "parler-tts/parler-tts-mini-expresso"  # env: MODEL
+    model: str = "parler-tts/parler-tts-large-v1"  # env: MODEL
     compile_mode: str = "reduce-overhead" # env: COMPILE_MODE
     attn_implementation: str = "sdpa" # env: ATTN_IMPLEMENTATION
     max_stream_sec: int = 30 # env: MAX_STREAM_SEC
