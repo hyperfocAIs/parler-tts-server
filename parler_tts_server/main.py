@@ -164,8 +164,8 @@ async def generate_audio(
             "Specifying speed isn't supported by this model. Audio will be generated with the default speed"
         )
     start = time.perf_counter()
-    input_ids = tokenizer(input, return_tensors="pt").input_ids.to(device)
-    prompt_input_ids = tokenizer(voice, return_tensors="pt").input_ids.to(device)
+    input_ids = tokenizer(voice, return_tensors="pt").input_ids.to(device)
+    prompt_input_ids = tokenizer(input, return_tensors="pt").input_ids.to(device) #prompt in OpenAI API means thet text to be converted to speech, but in Parler TTS it means the description of the speaking.
     generation = tts.generate(
         input_ids=input_ids, prompt_input_ids=prompt_input_ids
     ).to(  # type: ignore
