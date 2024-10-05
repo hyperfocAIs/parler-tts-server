@@ -61,7 +61,7 @@ class ModelManager:
             model_kwargs = {**inputs, "prompt_input_ids": inputs.input_ids, "prompt_attention_mask": inputs.attention_mask, }
 
             # warmup
-            if compile_mode != "default":
+            if config.compile_mode != "default":
                     # generating more tokens than previously will trigger CUDA graphs capture
                     # one should warmup with a number of generated tokens above max tokens targeted for subsequent generation
                     model_kwargs = {
