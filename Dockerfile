@@ -9,7 +9,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /root/parler-tts-server
-RUN pip3.12 install --no-cache-dir --no-deps git+https://github.com/huggingface/parler-tts.git 
+RUN pip3.12 install --no-cache-dir flash-attn --no-build-isolation
+RUN pip3.12 install --no-cache-dir --no-deps git+https://github.com/huggingface/parler-tts.git@dcaed95 
 COPY ./model_requirements.txt .
 RUN pip3.12 install --no-cache-dir -r model_requirements.txt
 COPY ./server_requirements.txt .
