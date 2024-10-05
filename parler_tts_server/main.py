@@ -52,7 +52,7 @@ class ModelManager:
         if config.compile_mode != "none":
             # compile the forward pass
             model.generation_config.cache_implementation = "static"
-            model.forward = torch.compile(model.forward, mode=compile_mode)
+            model.forward = torch.compile(model.forward, mode=config.compile_mode)
 
             # warmup
             inputs = tokenizer("This is for compilation", return_tensors="pt", padding="max_length", max_length=max_length).to(torch_device)
@@ -69,7 +69,7 @@ class ModelManager:
                         **model_kwargs
                     } 
 
-            n_steps = 1 if compile_mode == "default" else 2
+            n_steps = 1 if config.compile_mode == "default" else 2
             for _ in range(n_steps):
                 start_time = time.time()
                 _ = model.generate(**model_kwargs)
