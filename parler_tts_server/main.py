@@ -55,13 +55,6 @@ class ModelManager:
             # need to set padding max length
             max_length = 50
 
-            # load model and tokenizer
-            tokenizer = AutoTokenizer.from_pretrained(model_name) 
-            model = ParlerTTSForConditionalGeneration.from_pretrained(
-                model_name,
-                attn_implementation=attn_implementation    
-            ).to(torch_device, dtype=torch_dtype)
-
             # compile the forward pass
             model.generation_config.cache_implementation = "static"
             model.forward = torch.compile(model.forward, mode=compile_mode)
