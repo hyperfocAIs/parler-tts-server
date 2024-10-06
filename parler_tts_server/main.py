@@ -52,6 +52,8 @@ class ModelManager:
         compile_mode = config.compile_mode
 
         if compile_mode != "none":
+
+            max_stream_sec = config.max_stream_sec
             # need to set padding max length
             max_length = 50
 
